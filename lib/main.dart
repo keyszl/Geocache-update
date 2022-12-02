@@ -36,7 +36,8 @@ class LocationList extends StatefulWidget {
 }
 
 class _LocationListState extends State<LocationList> {
-  void initState() {
+  // https://stackoverflow.com/questions/49466556/flutter-run-method-on-widget-build-complete
+  void initState() { // this init state allows function to be called after widget has been built
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _itemSort());
   }
@@ -354,7 +355,7 @@ class _LocationListState extends State<LocationList> {
       return a.name.compareTo(b.name);
     });
 
-    setState(() {});
+    setState(() {}); // this updates the state once the list has been sorted
   }
 
   //final List<Item> itemss = [const Item(name: "add new direction", latitude: 0, longitude: 0 )];
