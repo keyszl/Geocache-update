@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Friends of the Farm',
+      title: 'Senior  Thesis',
       theme: ThemeData(
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.grey,
         textTheme: GoogleFonts.novaSlimTextTheme(),
       ),
       home: LocationList(),
@@ -46,9 +46,9 @@ class _LocationListState extends State<LocationList> {
   List<Item> items = [
     const Item(
         name: "Bailey Library", latitude: 35.10136, longitude: -92.44295),
-    const Item(
-        name: "Pecan Court Gazebo", latitude: 35.09928, longitude: -92.44269),
-    const Item(name: "Purple Cow", latitude: 35.10252, longitude: -92.43848),
+    //const Item(
+      //  name: "Pecan Court Gazebo", latitude: 35.09928, longitude: -92.44269),
+    //const Item(name: "Purple Cow", latitude: 35.10252, longitude: -92.43848),
     const Item(name: "Mills Center", latitude: 35.10007, longitude: -92.44314),
     const Item(
         name: "MC Reynolds",
@@ -58,7 +58,7 @@ class _LocationListState extends State<LocationList> {
         name: "MC Acxiom",
         latitude: 35.100770074226894,
         longitude: -92.44270292029088),
-    const Item(
+    /*const Item(
         name: "Bailey Lawn",
         latitude: 35.10111422366941,
         longitude: -92.44268089976055),
@@ -81,7 +81,7 @@ class _LocationListState extends State<LocationList> {
     const Item(
         name: "Dawkins Welcome Center",
         latitude: 35.101754142948145,
-        longitude: -92.44087475788315),
+        longitude: -92.44087475788315),*/
     const Item(
         name: "SLTC",
         latitude: 35.10057275369828,
@@ -93,8 +93,8 @@ class _LocationListState extends State<LocationList> {
     const Item(
         name: "Windgate Museum of Art",
         latitude: 35.10060090513588,
-        longitude: -92.44172428457483),
-    const Item(
+        longitude: -92.44172428457483)
+    /*const Item(
         name: "Hundley Shell Theater",
         latitude: 35.100536089211516,
         longitude: -92.44174210977862),
@@ -265,16 +265,16 @@ class _LocationListState extends State<LocationList> {
     const Item(
         name: "Tennis Courts",
         latitude: 35.101568894130686,
-        longitude: -92.43928220557744)
+        longitude: -92.43928220557744)*/
   ];
   final TextEditingController _inputController = TextEditingController();
   final TextEditingController _directionsController = TextEditingController();
   final ButtonStyle yesStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
-  final ButtonStyle noStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
+  //final ButtonStyle noStyle = ElevatedButton.styleFrom(
+      //textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
 
-  Future<void> _displayTextInputDialog(BuildContext context) async {
+  /*Future<void> _displayTextInputDialog(BuildContext context) async {
     print("Loading Dialog");
     return showDialog(
         context: context,
@@ -344,7 +344,7 @@ class _LocationListState extends State<LocationList> {
             ],
           );
         });
-  }
+  }*/
 
   String valueText = "";
   String itstext = "";
@@ -386,7 +386,7 @@ class _LocationListState extends State<LocationList> {
       items.remove(song);
     });
   }*/
-
+  /*
   void _handleNewItem(String valueText, String itstext) {
     setState(() {
       print("Adding new item");
@@ -400,13 +400,13 @@ class _LocationListState extends State<LocationList> {
       _inputController.clear();
       _directionsController.clear();
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Geocaching App"),
+          title: const Text("Accessible Navigation"),
           backgroundColor: Colors.brown,
         ),
         body: ListView(
@@ -420,11 +420,11 @@ class _LocationListState extends State<LocationList> {
             );
           }).toList(),
         ),
-        floatingActionButton: NewButton(
+        //floatingActionButton: NewButton(
             //child: const Icon(Icons.add),
-            onPressed: () {
-          _displayTextInputDialog(context);
-        }));
+            //onPressed: () {
+          //_displayTextInputDialog(context);
+        );
   }
 }
 
