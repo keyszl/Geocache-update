@@ -100,7 +100,7 @@ class CompassScreenState extends State<CompassScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Text(
-                'Direction to Geocache:',
+                'Direction to ' + widget.item.name + ":",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
@@ -146,6 +146,14 @@ class CompassScreenState extends State<CompassScreen> {
     );
   }
 }
+
+// increment second counter until target is reached then store it
+
+
+
+// send gps coordinates over socket communication
+
+
 
 /// Example position-finding method from the Geolocator API (https://pub.dev/packages/geolocator)
 Future<Position> _determinePosition() async {

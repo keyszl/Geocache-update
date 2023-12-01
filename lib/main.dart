@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Senior  Thesis',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.green,
         textTheme: GoogleFonts.novaSlimTextTheme(),
       ),
       home: LocationList(),
@@ -407,7 +407,7 @@ class _LocationListState extends State<LocationList> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Accessible Navigation"),
-          backgroundColor: Colors.brown,
+          
         ),
         body: ListView(
           key: ObjectKey(items.first),

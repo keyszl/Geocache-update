@@ -62,7 +62,8 @@ class LocationItem extends StatelessWidget {
         );
       },
       leading: CircleAvatar(
-        backgroundColor: _getColor(context),
+        backgroundImage: AssetImage('pin.png'),
+        backgroundColor: Color.fromARGB(255, 231, 230, 230),
       ),
       title: Text(
         item.name,
@@ -70,7 +71,6 @@ class LocationItem extends StatelessWidget {
       ),
       subtitle: Text("(" +
          item.latitude.toString() +
-          //latitude.toString() +
           ", " +
           item.longitude.toString() +
           ")"),
