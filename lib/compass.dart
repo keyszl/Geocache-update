@@ -19,7 +19,7 @@ class CompassScreenState extends State<CompassScreen> {
   CompassScreenState() {
     // Listeners are initialized inside the State's constructor
     // magnetometer listener (updates angle)
-    magnetometerEvents.listen(
+    magnetometerEventStream().listen(
       (event) {
         _angleOffset = _convertMagnetometerEventToHeading(event);
         _updateAngle();

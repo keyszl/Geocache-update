@@ -62,8 +62,8 @@ class LocationItem extends StatelessWidget {
         );
       },
       leading: CircleAvatar(
-        backgroundImage: AssetImage('pin.png'),
-        backgroundColor: Color.fromARGB(255, 231, 230, 230),
+        backgroundImage: NetworkImage('https://www.iconpacks.net/icons/2/free-location-pin-icon-3090-thumb.png'),
+        backgroundColor: Color.fromARGB(0, 231, 230, 230),
       ),
       title: Text(
         item.name,
