@@ -152,7 +152,7 @@ class CompassScreenState extends State<CompassScreen> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             Text(
-              'Current Position: ${globals.phone_lat} ${globals.phone_long}',
+              'Current Position: ${_pos?.latitude} ${_pos?.longitude}',
               style: Theme.of(context).textTheme.headlineSmall
             )
           ],
@@ -206,20 +206,7 @@ Future<Position> _determinePosition() async {
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
   //return await Geolocator.getCurrentPosition();
-  var _currentPosition;
-  await Geolocator.getCurrentPosition(
-    desiredAccuracy: LocationAccuracy.bestForNavigation,
-  ).then((Position position) {
-    _currentPosition = position;
-    print(_currentPosition);
-    globals.phone_lat = _currentPosition.latitude; // global library to store this
-    globals.phone_long = _currentPosition.longitude;
-
-    return _currentPosition;
-    
-  }).catchError((e) {
-    debugPrint(e);
-  });
+  
 
   return await Geolocator.getCurrentPosition();
 }
