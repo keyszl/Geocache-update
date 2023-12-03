@@ -5,6 +5,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:geocaching_app/location_items.dart';
 import 'package:geocaching_app/main.dart';
 import 'dart:math' as math;
+import 'globals.dart' as globals;
 
 class CompassScreen extends StatefulWidget {
   const CompassScreen({super.key, required this.item});
@@ -14,6 +15,12 @@ class CompassScreen extends StatefulWidget {
   @override
   State<CompassScreen> createState() => CompassScreenState();
 }
+
+/*void initState() { it seems like _determinePosition wasn't being called and thus no location services were granted so adding a call below made compas work again
+    initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _determinePosition());
+  }*/
 
 class CompassScreenState extends State<CompassScreen> {
   CompassScreenState() {
@@ -87,8 +94,12 @@ class CompassScreenState extends State<CompassScreen> {
     _targetDist = rawDist.toInt();
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
+    _determinePosition();
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Compass'),
@@ -140,6 +151,10 @@ class CompassScreenState extends State<CompassScreen> {
               '${_targetDist}m',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
+            Text(
+              'Current Position: ${globals.phone_lat} ${globals.phone_long}',
+              style: Theme.of(context).textTheme.headlineSmall
+            )
           ],
         ),
       ),
@@ -190,5 +205,21 @@ Future<Position> _determinePosition() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
+  //return await Geolocator.getCurrentPosition();
+  var _currentPosition;
+  await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.bestForNavigation,
+  ).then((Position position) {
+    _currentPosition = position;
+    print(_currentPosition);
+    globals.phone_lat = _currentPosition.latitude; // global library to store this
+    globals.phone_long = _currentPosition.longitude;
+
+    return _currentPosition;
+    
+  }).catchError((e) {
+    debugPrint(e);
+  });
+
   return await Geolocator.getCurrentPosition();
 }
