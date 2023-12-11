@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -95,6 +96,42 @@ class CompassScreenState extends State<CompassScreen> {
   }
 
   
+// send gps coordinates over socket communication
+//https://medium.com/@buddi/establish-a-client-side-tcp-socket-connection-for-data-communication-using-the-dart-io-117e2f76b540
+void socket_start() async{
+  final String serverIp = '127.0.0.1'; // Change to the server's IP address
+  final int serverPort = 12345; // Change to the server's port
+
+   try {
+    // Create a socket connection to the server
+    final socket = await Socket.connect(serverIp, serverPort);
+
+    // Send data to the server
+    socket.writeln('a ${_pos?.latitude} ${_pos?.longitude}');
+
+    // Listen for data from the server
+    socket.listen(
+      (data) {
+        print('Received from server: ${String.fromCharCodes(data)}');
+      },
+      onDone: () {
+        print('Server disconnected.');
+        socket.destroy();
+      },
+      onError: (error) {
+        print('Error: $error');
+        socket.destroy();
+      },
+    );
+
+    // Close the socket when you're done
+    // socket.close();
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -164,9 +201,6 @@ class CompassScreenState extends State<CompassScreen> {
 
 // increment second counter until target is reached then store it
 
-
-
-// send gps coordinates over socket communication
 
 
 
