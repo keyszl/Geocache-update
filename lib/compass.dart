@@ -19,6 +19,11 @@ class CompassScreen extends StatefulWidget {
   State<CompassScreen> createState() => CompassScreenState();
 }
 
+void initState(){
+  init();
+  startServer();
+}
+
 /*void initState() { it seems like _determinePosition wasn't being called and thus no location services were granted so adding a call below made compas work again
     initState();
     WidgetsBinding.instance
@@ -141,7 +146,7 @@ class CompassScreenState extends State<CompassScreen> {
 // send gps coordinates over socket communication
 //https://medium.com/@buddi/establish-a-client-side-tcp-socket-connection-for-data-communication-using-the-dart-io-117e2f76b540
 void socket_start() async{
-  final String serverIp = '127.0.0.1'; // Change to the server's IP address
+  final String serverIp = '10.253.101.176'; // Change to the server's IP address
   final int serverPort = 12345; // Change to the server's port
 
    try {
@@ -172,6 +177,40 @@ void socket_start() async{
     print('Error: $e');
   }
 }
+
+const hostname = '127.0.0.1'; // Binds to all adapters
+const port = 8000;
+
+Future<void> startServer() async {
+  final server = await ServerSocket.bind(hostname, port);
+  print('TCP server started at ${server.address}:${server.port}.');
+
+  try {
+    server.listen((Socket socket) {
+      print(
+          'New TCP client ${socket.address.address}:${socket.port} connected.');
+      socket.writeln("Hello from the echo server!");
+      socket.writeln("How are you?");
+      socket.listen(
+        (Uint8List data) {
+          if (data.length > 0 && data.first == 10) return;
+          final msg = data.toString();
+          print('Data from client: $msg');
+          socket.add(utf8.encode("Echo: "));
+          socket.add(data);
+        },
+        onError: (error) {
+          print('Error for client ${socket.address.address}:${socket.port}.');
+        },
+        onDone: () {
+          print('Connection to client ${socket.address.address}:${socket.port} done.');
+        });
+    });
+  } on SocketException catch (ex) {
+    print(ex.message);
+  }
+}
+
 
   
 
@@ -230,6 +269,8 @@ void socket_start() async{
               '${_targetDist}m',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
+
+
             Text(
               'Current Position: ${_pos?.latitude} ${_pos?.longitude}',
               style: Theme.of(context).textTheme.headlineSmall
@@ -241,6 +282,8 @@ void socket_start() async{
   }
 }
 
+//10.253.101.176
+//
 // increment second counter until target is reached then store it
 
 
@@ -281,8 +324,7 @@ Future<Position> _determinePosition() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-  //return await Geolocator.getCurrentPosition();
   
-
   return await Geolocator.getCurrentPosition();
+
 }
