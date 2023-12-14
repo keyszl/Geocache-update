@@ -19,27 +19,26 @@ class CompassScreen extends StatefulWidget {
   State<CompassScreen> createState() => CompassScreenState();
 }
 
-void initState(){
-  init();
-  startServer();
-}
-
 /*void initState() { it seems like _determinePosition wasn't being called and thus no location services were granted so adding a call below made compas work again
     initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _determinePosition());
   }*/
 
+/*
 void initState(){
-  initState();
+  init();
   startServer();
-}
+}*/
 
 
-const hostname = '127.0.0.1'; // Binds to all adapters
-const port = 8000;
+const hostname = '172.17.0.24'; // Binds to all adapters
+const port = 8001;
  
 Future<void> startServer() async {
+  if (globals.serverbound == false){
+    print("hellloooooo");
+    globals.serverbound = true;
   final server = await ServerSocket.bind(hostname, port);
   print('TCP server started at ${server.address}:${server.port}.');
  
@@ -47,8 +46,8 @@ Future<void> startServer() async {
     server.listen((Socket socket) {
     print(
         'New TCP client ${socket.address.address}:${socket.port} connected.');
-      socket.writeln("Hello from the echo server!");
-      socket.writeln("How are you?");
+      socket.writeln("${globals.direction}");
+      
       socket.listen(
         (Uint8List data) {
           if (data.length > 0 && data.first == 10) return;
@@ -66,14 +65,27 @@ Future<void> startServer() async {
       });
    } on SocketException catch (ex) {
     print(ex.message);
-  }
+  }}
+  
 }
 
 
 class CompassScreenState extends State<CompassScreen> {
+
+  bool serverbound = false;
+
   CompassScreenState() {
     // Listeners are initialized inside the State's constructor
     // magnetometer listener (updates angle)
+
+    /*void initState(){
+      super.initState();
+      if (globals.serverbound == false){
+        startServer();
+      }    
+      print("initstate");
+    }*/
+
     magnetometerEventStream().listen(
       (event) {
         _angleOffset = _convertMagnetometerEventToHeading(event);
@@ -133,6 +145,7 @@ class CompassScreenState extends State<CompassScreen> {
 
     setState(() {
       _angle = bearing - _angleOffset;
+      globals.direction = _angle;
     });
   }
 
@@ -142,77 +155,6 @@ class CompassScreenState extends State<CompassScreen> {
     _targetDist = rawDist.toInt();
   }
 
-  
-// send gps coordinates over socket communication
-//https://medium.com/@buddi/establish-a-client-side-tcp-socket-connection-for-data-communication-using-the-dart-io-117e2f76b540
-void socket_start() async{
-  final String serverIp = '10.253.101.176'; // Change to the server's IP address
-  final int serverPort = 12345; // Change to the server's port
-
-   try {
-    // Create a socket connection to the server
-    final socket = await Socket.connect(serverIp, serverPort);
-
-    // Send data to the server
-    socket.writeln('a ${_pos?.latitude} ${_pos?.longitude}');
-
-    // Listen for data from the server
-    socket.listen(
-      (data) {
-        print('Received from server: ${String.fromCharCodes(data)}');
-      },
-      onDone: () {
-        print('Server disconnected.');
-        socket.destroy();
-      },
-      onError: (error) {
-        print('Error: $error');
-        socket.destroy();
-      },
-    );
-
-    // Close the socket when you're done
-    // socket.close();
-  } catch (e) {
-    print('Error: $e');
-  }
-}
-
-const hostname = '127.0.0.1'; // Binds to all adapters
-const port = 8000;
-
-Future<void> startServer() async {
-  final server = await ServerSocket.bind(hostname, port);
-  print('TCP server started at ${server.address}:${server.port}.');
-
-  try {
-    server.listen((Socket socket) {
-      print(
-          'New TCP client ${socket.address.address}:${socket.port} connected.');
-      socket.writeln("Hello from the echo server!");
-      socket.writeln("How are you?");
-      socket.listen(
-        (Uint8List data) {
-          if (data.length > 0 && data.first == 10) return;
-          final msg = data.toString();
-          print('Data from client: $msg');
-          socket.add(utf8.encode("Echo: "));
-          socket.add(data);
-        },
-        onError: (error) {
-          print('Error for client ${socket.address.address}:${socket.port}.');
-        },
-        onDone: () {
-          print('Connection to client ${socket.address.address}:${socket.port} done.');
-        });
-    });
-  } on SocketException catch (ex) {
-    print(ex.message);
-  }
-}
-
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -266,11 +208,9 @@ Future<void> startServer() async {
               ),
             ),
             Text(
-              '${_targetDist}m',
+              '${_targetDist}m ${startServer()}}',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-
-
             Text(
               'Current Position: ${_pos?.latitude} ${_pos?.longitude}',
               style: Theme.of(context).textTheme.headlineSmall
@@ -282,10 +222,7 @@ Future<void> startServer() async {
   }
 }
 
-//10.253.101.176
-//
 // increment second counter until target is reached then store it
-
 
 
 
@@ -324,7 +261,8 @@ Future<Position> _determinePosition() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
+  //return await Geolocator.getCurrentPosition();
   
-  return await Geolocator.getCurrentPosition();
 
+  return await Geolocator.getCurrentPosition();
 }

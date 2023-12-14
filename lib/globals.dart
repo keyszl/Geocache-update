@@ -1,4 +1,4 @@
 library thesis.globals;
 
-double phone_lat = 0.0;
-double phone_long = 0.0;
+bool serverbound = false;
+double direction = 0.0;
